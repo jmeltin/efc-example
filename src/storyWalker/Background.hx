@@ -58,13 +58,10 @@ class Background extends Component {
 			.add(new Sprite())
 			.add(_player = new MoviePlayer(new Library(_pack, "background")).loop("default"));
 		_player.movie._.setAnchor(0,_player.movie._.getLayer("back").get(Sprite).getNaturalHeight());
-		_player.movie._.paused = true;
 
 		_player.movie._.getLayer("platform1").add(new MovieBody());
 		_player.movie._.getLayer("platform2").add(new MovieBody());
-		_player.movie._.getLayer("platform3").add(new MovieBody());
 		_player.movie._.getLayer("platform4").add(new MovieBody());
-		_player.movie._.getLayer("ashley").add(new MovieBody());
 	}
 
 	private var _container : Entity;

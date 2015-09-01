@@ -63,9 +63,9 @@ class Controller extends Component
 	private inline function onKeyUp(e :KeyboardEvent) : Void
 	{
 		switch (e.key) {
-			case A: _isLeft  = false;
-			case D: _isRight = false;
-			case W: _isUp    = false;
+			case Q: _isLeft  = false;
+			case C: _isRight = false;
+			case E: _isUp    = false;
 			default:
 		}
 	}

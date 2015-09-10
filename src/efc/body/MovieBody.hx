@@ -44,7 +44,13 @@ class MovieBody extends Component
 		_offsetX = vMatrix.m02 - lMatrix.m02;
 		_offsetY = vMatrix.m12 - lMatrix.m12;
 
+		body.userData.component = this;
 		_bodyContainer.addBody(body);
+	}
+
+	@:keep public function handleBodyCallback() : Void
+	{
+		trace("i am a movie body");
 	}
 
 	private var _offsetX       : Float;

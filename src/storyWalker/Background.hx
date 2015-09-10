@@ -28,30 +28,6 @@ class Background extends Component {
 		return this;
 	}
 
-	public function moveLeft(speed :Float) : Bool
-	{
-		if(_position <= 0) {
-			_position = 0;
-			return false;
-		}
-		_position -= speed;
-		_player.movie._.position = _position;
-		_container.get(Sprite).x._ = -_position;
-		return true;
-	}
-
-	public function moveRight(speed :Float) : Bool
-	{
-		if(_position >= 900) {
-			_position = 900;
-			return false;
-		}
-		_position += speed;
-		_player.movie._.position = _position;
-		_container.get(Sprite).x._ = -_position;
-		return true;
-	}
-
 	private function init() : Void
 	{
 		_container = new Entity()

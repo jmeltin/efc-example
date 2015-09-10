@@ -53,9 +53,13 @@ class Controller extends Component
 	private inline function onKeyDown(e :KeyboardEvent) : Void
 	{
 		switch (e.key) {
-			case A: _isLeft = true; _isRight = false; _isDown = false; _isSpace = false;
-			case D: _isLeft = false; _isRight = true; _isDown = false; _isSpace = false;
-			case W: _isUp = true; _isDown = false; _isSpace = false; //up
+			// case A: _isLeft = true; _isRight = false; _isDown = false; _isSpace = false;
+			// case D: _isLeft = false; _isRight = true; _isDown = false; _isSpace = false;
+			// case K: _isUp = true; _isDown = false; _isSpace = false; //up
+
+			case Left: _isLeft = true; _isRight = false; _isDown = false; _isSpace = false;
+			case Right: _isLeft = false; _isRight = true; _isDown = false; _isSpace = false;
+			case Space: _isUp = true; _isDown = false; _isSpace = false; //up
 			default:
 		}
 	}
@@ -63,9 +67,13 @@ class Controller extends Component
 	private inline function onKeyUp(e :KeyboardEvent) : Void
 	{
 		switch (e.key) {
-			case Q: _isLeft  = false;
-			case C: _isRight = false;
-			case E: _isUp    = false;
+			// case Q: _isLeft  = false;
+			// case C: _isRight = false;
+			// case P: _isUp    = false;
+
+			case Left: _isLeft  = false;
+			case Right: _isRight = false;
+			case Space: _isUp    = false;
 			default:
 		}
 	}
@@ -73,8 +81,8 @@ class Controller extends Component
 	private inline function velocity() : Float
 	{
 		if(_speed > _max)
-			return 0.4*Math.pow(_max, 3) + 1.3*Math.pow(_max, 3);
-		return 0.4*Math.pow(_speed, 3) + 1.3*Math.pow(_speed, 3);
+			return 0.4*Math.pow(_max, 3) + 1.8*Math.pow(_max, 3);
+		return 0.4*Math.pow(_speed, 3) + 1.8*Math.pow(_speed, 3);
 	}
 
 	private var _speed     : Float;

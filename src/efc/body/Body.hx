@@ -18,6 +18,7 @@ class Body extends Component
 	{
 		_bodyContainer = System.root.get(BodyContainer);
 		body = new nape.phys.Body();
+		body.allowRotation = false;
 	}
 
 	override public function onUpdate(dt :Float) : Void
@@ -38,13 +39,9 @@ class Body extends Component
 		body.position = Vec2.weak(_sprite.x._, _sprite.y._);
 		body.rotation = _sprite.rotation._;
 
-
 		_bodyContainer.addBody(body);
 	}
 
 	private var _bodyContainer : BodyContainer;
 	private var _sprite        : Sprite;
-	private var _lastX         : Float;
-	private var _lastY         : Float;
-	private var _lastR         : Float;
 }

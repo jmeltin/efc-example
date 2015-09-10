@@ -4,9 +4,11 @@ import flambe.Entity;
 import flambe.System;
 import flambe.Component;
 import flambe.asset.AssetPack;
+import flambe.display.Sprite;
 
 import efc.body.BodyContainer;
 import efc.controller.Controller;
+import efc.juice.Shaker;
 
 import flambe.input.KeyboardEvent;
 
@@ -25,11 +27,15 @@ class Game extends Component
 	{
 		System.root.add(new BodyContainer());
 		var background = new Entity().add(_back = new Background(_pack).setXY(0, System.stage.height));
+
 		var walker = new Entity()
 			.add(new Walker(_pack))
 			.add(new Body());
-		var cntrl = new Entity().add(new Controller(0.4, 1.5));
+		var cntrl = new Entity().add(new Controller(0.4, 1.7));
 
+		_container
+			.add(new Sprite())
+			.add(new Shaker(_pack));
 		_container.addChild(background);
 		_container.addChild(walker);
 		_container.addChild(cntrl);

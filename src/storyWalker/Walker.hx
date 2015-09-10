@@ -1,16 +1,16 @@
 package storyWalker;
 
-import flambe.Component;
 import flambe.Entity;
+import flambe.Component;
 import flambe.asset.AssetPack;
 import flambe.display.FillSprite;
-import flambe.display.ImageSprite;
 import flambe.display.Sprite;
 import flambe.script.*;
 import flambe.animation.Ease;
-import flambe.swf.MoviePlayer;
-import flambe.swf.MovieSprite;
-import flambe.swf.Library;
+import flambe.animation.AnimatedFloat;
+import flambe.util.SignalConnection;
+
+import efc.juice.Shaker;
 
 import nape.geom.Vec2;
 import efc.body.Body;
@@ -19,9 +19,6 @@ class Walker extends Component
 {
 	public var sprite (default, null) : FillSprite;
 
-	private var _mspr :MovieSprite;
-
-	public var isUp : Bool = false;
 
 	public function new(pack :AssetPack) : Void
 	{
@@ -30,27 +27,84 @@ class Walker extends Component
 
 	override public function onStart() : Void
 	{
-		owner.add(sprite = cast new FillSprite(0x00FF00, 70, 70)
-			.setXY(400, 40)
-			.centerAnchor()
-			.disablePixelSnapping());
+		_signalPosY = _posY.changed.connect(onYChanged);
+
+		_body = owner.get(Body);
+		_body.body.userData.component = this;
+		owner
+			.add(sprite = cast new FillSprite(0x00FF00, 70, 70)
+				.setXY(400, 40)
+				.centerAnchor()
+				.disablePixelSnapping())
+			.addChild(_eyes
+				.add(new FillSprite(0x000000, 60, 4)
+					.setXY(35, 10)
+					.centerAnchor())
+				.addChild(new Entity()
+					.add(new FillSprite(0x000000, 20, 15)
+						.setXY(10, 0)))
+				.addChild(new Entity()
+					.add(new FillSprite(0x000000, 20, 15)
+						.setXY(40, 0))));
+	}
+
+	override public function onUpdate(dt :Float) : Void
+	{
+		_posY.update(dt);
+		_eyes.get(Sprite).scaleX.update(dt);
+		_eyes.get(Sprite).scaleY.update(dt);
+	}
+
+	override public function onRemoved() : Void
+	{
+		_signalPosY.dispose();
 	}
 
 	public function moveLeft(speed :Float) : Void
 	{
-		owner.get(Body).body.position.x -= speed;
+		_body.body.position.x -= speed;
+		sprite.scaleX._ = -1 * Math.abs(sprite.scaleX._);
 	}
 
 	public function moveRight(speed :Float) : Void
 	{
-		owner.get(Body).body.position.x += speed;
+		_body.body.position.x += speed;
+		sprite.scaleX._ = Math.abs(sprite.scaleX._);
 	}
 
 	public function moveUp(speed :Float) : Void
 	{
-		owner.get(Body).body.velocity.y -= 30;
+		if(!_canJump)
+			return;
+
+		_canJump = false;
+		_posY._ =_body.body.position.y;
+		owner.add(new Script()).get(Script).run(new Parallel([
+			new AnimateBy(_posY, -200, 0.5, Ease.cubeOut),
+			new AnimateBy(_eyes.get(Sprite).scaleX, 1.25, 0.5, Ease.cubeOut),
+			new AnimateBy(_eyes.get(Sprite).scaleY, 1.25, 0.5, Ease.cubeOut),
+		]));
 	}
 
-	private var _pack    : AssetPack;
-	private var _container :Entity;
+	@:keep public function handleBodyCallback(impulse :Float) : Void
+	{
+		_canJump = true;
+		impulse /= 5000;
+		owner.getFromParents(Shaker).shake(impulse);
+		_eyes.get(Sprite).setScale(1);
+	}
+
+	private function onYChanged(to :Float, from :Float) :Void
+	{
+		_body.body.position.y = to;
+	}
+
+	private var _body     : Body;
+	private var _canJump  : Bool = false;
+	private var _pack     : AssetPack;
+	private var _posY     : AnimatedFloat = new AnimatedFloat(0);
+	private var _eyes     : Entity = new Entity();
+
+	private var _signalPosY :SignalConnection;
+	private var _signalScale :SignalConnection;
 }
